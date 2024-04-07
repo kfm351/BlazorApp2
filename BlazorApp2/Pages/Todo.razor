@@ -1,0 +1,42 @@
+﻿@page "/todo"
+@using System.Collections.Generic
+
+<h1 class="display-4">Blazor Todo List</h1>
+
+<div class="input-group mb-3">
+    <input type="text" class="form-control" @bind="NewTaskText" placeholder="Enter new task" />
+    <div class="input-group-append">
+        <button class="btn btn-primary" @onclick="AddTask">Add Task</button>
+    </div>
+</div>
+
+<ul class="list-group">
+    @foreach (var task in Tasks)
+    {
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            @task
+            <span>
+                <button class="btn btn-danger btn-sm" @onclick="(() => RemoveTask(task))">Remove</button>
+            </span>
+        </li>
+    }
+</ul>
+
+@code {
+    private string NewTaskText { get; set; }
+    private List<string> Tasks { get; set; } = new List<string>();
+
+    private void AddTask()
+    {
+        if (!string.IsNullOrWhiteSpace(NewTaskText))
+        {
+            Tasks.Add(NewTaskText);
+            NewTaskText = string.Empty;
+        }
+    }
+
+    private void RemoveTask(string task)
+    {
+        Tasks.Remove(task);
+    }
+}

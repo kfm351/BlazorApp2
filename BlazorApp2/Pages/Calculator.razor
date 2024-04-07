@@ -1,0 +1,101 @@
+﻿@page "/calculator"
+@using System
+
+<h1 class="display-4">Blazor Calculator</h1>
+
+<div class="calculator">
+    <input type="text" class="form-control" @bind="Display" readonly />
+</div>
+
+<div class="calculator-row">
+    <button class="btn btn-primary" @onclick="(() => NumberClicked(1))">1</button>
+    <button class="btn btn-primary" @onclick="(() => NumberClicked(2))">2</button>
+    <button class="btn btn-primary" @onclick="(() => NumberClicked(3))">3</button>
+    <button class="btn btn-primary" @onclick="(() => OperatorClicked('+'))">+</button>
+</div>
+<div class="calculator-row">
+    <button class="btn btn-primary" @onclick="(() => NumberClicked(4))">4</button>
+    <button class="btn btn-primary" @onclick="(() => NumberClicked(5))">5</button>
+    <button class="btn btn-primary" @onclick="(() => NumberClicked(6))">6</button>
+    <button class="btn btn-primary" @onclick="(() => OperatorClicked('-'))">-</button>
+</div>
+<div class="calculator-row">
+    <button class="btn btn-primary" @onclick="(() => NumberClicked(7))">7</button>
+    <button class="btn btn-primary" @onclick="(() => NumberClicked(8))">8</button>
+    <button class="btn btn-primary" @onclick="(() => NumberClicked(9))">9</button>
+    <button class="btn btn-primary" @onclick="(() => OperatorClicked('*'))">*</button>
+</div>
+<div class="calculator-row">
+    <button class="btn btn-primary" @onclick="(() => NumberClicked(0))">0</button>
+    <button class="btn btn-secondary" @onclick="Clear">C</button>
+    <button class="btn btn-success" @onclick="Calculate">=</button>
+    <button class="btn btn-primary" @onclick="(() => OperatorClicked('/'))">/</button>
+</div>
+
+@code {
+    private string Display { get; set; } = "0";
+    private string FirstOperand { get; set; }
+    private string SecondOperand { get; set; }
+    private char SelectedOperator { get; set; }
+    private bool IsOperatorClicked { get; set; }
+
+    private void NumberClicked(int number)
+    {
+        if (Display == "0" || IsOperatorClicked)
+        {
+            Display = number.ToString();
+            IsOperatorClicked = false;
+        }
+        else
+        {
+            Display += number.ToString();
+        }
+    }
+
+    private void OperatorClicked(char op)
+    {
+        FirstOperand = Display;
+        SelectedOperator = op;
+        IsOperatorClicked = true;
+    }
+
+    private void Calculate()
+    {
+        SecondOperand = Display;
+        double result = 0;
+
+        switch (SelectedOperator)
+        {
+            case '+':
+                result = Convert.ToDouble(FirstOperand) + Convert.ToDouble(SecondOperand);
+                break;
+            case '-':
+                result = Convert.ToDouble(FirstOperand) - Convert.ToDouble(SecondOperand);
+                break;
+            case '*':
+                result = Convert.ToDouble(FirstOperand) * Convert.ToDouble(SecondOperand);
+                break;
+            case '/':
+                if (SecondOperand != "0")
+                {
+                    result = Convert.ToDouble(FirstOperand) / Convert.ToDouble(SecondOperand);
+                }
+                else
+                {
+                    result = double.NaN; // Indicate division by zero
+                }
+                break;
+        }
+
+        Display = result.ToString();
+    }
+
+    private void Clear()
+    {
+        Display = "0";
+        FirstOperand = null;
+        SecondOperand = null;
+        SelectedOperator = ' ';
+        IsOperatorClicked = false;
+    }
+}
