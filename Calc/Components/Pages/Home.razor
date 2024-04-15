@@ -1,0 +1,19 @@
+﻿@page "/"
+@using Calc.Data
+@rendermode InteractiveServer
+
+<h3>Email</h3>
+<input @bind="_email"/>
+<h3>Message</h3>
+<input @bind="_message"/>
+<button class="btn btn-primary" @onclick="SendMessage">Send</button>
+
+@code {
+    private string _email;
+    private string _message;
+
+    private void SendMessage()
+    {
+        MailSender.SendMail(_email, _message);
+    }
+}
